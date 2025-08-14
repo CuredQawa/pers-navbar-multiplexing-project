@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vercel 风格导航栏（精准还原）</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9fafb;
+      color: #111;
+    }
+
+    .navbar {
+      position: relative;
+      padding: 1rem 2rem;
+      background: white;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      align-items: center;
+    }
+
+    /* 左侧图标区（正方形） */
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      background: #000;
+      border-radius: 0.5rem;
+      margin-right: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    /* 导航菜单 */
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-item {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      color: #111;
+      transition: background 0.2s ease;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+    }
+
+    /* 箭头间距 */
+    .nav-item[data-dropdown] {
+      padding-right: 1.8rem;
+    }
+
+    .nav-item[data-dropdown]::after {
+      content: "";
+      position: absolute;
+      right: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      width: 12px;
+      height: 12px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236b7280' stroke-width='1.5'%3E%3Cpath d='M1.5 4.5l4.5 4.5 4.5-4.5'/%3E%3C/svg%3E") no-repeat center;
+      opacity: 0.8;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1);
+    }
+
+    .nav-item.active[data-dropdown]::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* 汉堡按钮（靠右） */
+    .hamburger {
+      margin-left: auto;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #111;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 7px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    /* 桌面端下拉面板（左边界对齐导航项起始） */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      /* 左侧对齐：图标 + 间距 + 导航起始 */
+      left: calc(32px + 1.5rem); /* .nav-logo 宽 + margin-right */
+      width: 400px;
+      height: 280px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s, transform 0.3s ease;
+      z-index: 1000;
+      overflow: hidden;
+      border-radius: 1rem;
+    }
+
+    .dropdown-panel.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(8px);
+    }
+
+    .dropdown-slider {
+      display: flex;
+      width: 300%;
+      min-width: 1200px;
+      height: 100%;
+      transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1);
+    }
+
+    .dropdown-page {
+      width: 400px;
+      flex-shrink: 0;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+
+    .dropdown-content {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      height: 100%;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .dropdown-column h3 {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dropdown-column a {
+      display: block;
+      color: #111;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      font-size: 0.95rem;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .dropdown-column a:hover {
+      color: #000;
+      transform: translateX(4px);
+    }
+
+    /* ========== 移动端：Vercel 风格侧边栏 ========== */
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-menu {
+        display: none;
+      }
+
+      /* 隐藏桌面下拉 */
+      .dropdown-panel {
+        display: none;
+      }
+    }
+
+    /* 移动端侧边栏（覆盖式） */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1);
+      z-index: 1100;
+      padding: 3.5rem 1.5rem 2rem;
+      overflow-y: auto;
+    }
+
+    .mobile-sidebar.active {
+      transform: translateX(0);
+    }
+
+    .mobile-sidebar-item {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-sidebar-item:hover {
+      background: #f3f4f6;
+    }
+
+    .mobile-sidebar-submenu {
+      margin-top: 0.5rem;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 0.5rem;
+      display: none;
+    }
+
+    .mobile-sidebar-submenu.active {
+      display: block;
+    }
+
+    .mobile-sidebar-submenu a {
+      display: block;
+      padding: 0.5rem 0;
+      color: #555;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <!-- 左侧正方形图标 -->
+    <div class="nav-logo"></div>
+
+    <!-- 桌面导航 -->
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item" data-target="products" data-dropdown>Products</li>
+      <li class="nav-item" data-target="solutions" data-dropdown>Solutions</li>
+      <li class="nav-item" data-target="resources" data-dropdown>Resources</li>
+    </ul>
+
+    <!-- 汉堡按钮（靠右） -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- 桌面下拉面板 -->
+    <div class="dropdown-panel" id="dropdownPanel">
+      <div class="dropdown-slider">
+        <div class="dropdown-page" data-page="products">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🚀 Frontend</h3>
+              <a href="#">Next.js</a>
+              <a href="#">Edge Functions</a>
+              <a href="#">Static Hosting</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🔧 Backend</h3>
+              <a href="#">Serverless</a>
+              <a href="#">Edge Config</a>
+              <a href="#">Functions</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="solutions">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🎯 Use Cases</h3>
+              <a href="#">Jamstack</a>
+              <a href="#">SSG</a>
+              <a href="#">Microservices</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🏢 Industries</h3>
+              <a href="#">E-commerce</a>
+              <a href="#">Marketing</a>
+              <a href="#">Startups</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="resources">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>📘 Learn</h3>
+              <a href="#">Docs</a>
+              <a href="#">Blog</a>
+              <a href="#">Tutorials</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🛠️ Support</h3>
+              <a href="#">Help Center</a>
+              <a href="#">Contact</a>
+              <a href="#">Status</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 移动端侧边栏（Vercel 风格） -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-item" data-mobile-dropdown="products">
+      Products
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="products">
+      <a href="#">Next.js</a>
+      <a href="#">Edge Functions</a>
+      <a href="#">Static Hosting</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="solutions">
+      Solutions
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="solutions">
+      <a href="#">Jamstack</a>
+      <a href="#">SSG</a>
+      <a href="#">Microservices</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="resources">
+      Resources
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="resources">
+      <a href="#">Docs</a>
+      <a href="#">Blog</a>
+      <a href="#">Tutorials</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbar = document.getElementById('navbar');
+      const hamburger = document.getElementById('hamburger');
+      const mobileSidebar = document.getElementById('mobileSidebar');
+      const panel = document.getElementById('dropdownPanel');
+      const slider = panel.querySelector('.dropdown-slider');
+      const items = document.querySelectorAll('.nav-item[data-dropdown]');
+
+      const pages = ['products', 'solutions', 'resources'];
+      const pageWidth = 400;
+      let timeout;
+
+      // ======== 汉堡菜单：右侧滑入 ========
+      hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hamburger.classList.toggle('active');
+        mobileSidebar.classList.toggle('active');
+      });
+
+      // 点击遮罩关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileSidebar.contains(e.target) && !hamburger.contains(e.target)) {
+          mobileSidebar.classList.remove('active');
+          hamburger.classList.remove('active');
+        }
+      });
+
+      // ======== 移动端下拉切换 ========
+      document.querySelectorAll('[data-mobile-dropdown]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.mobileDropdown;
+          const submenu = document.querySelector(`[data-submenu="${key}"]`);
+
+          // 切换展开状态
+          document.querySelectorAll('.mobile-sidebar-submenu').forEach(el => {
+            el.classList.remove('active');
+          });
+          document.querySelectorAll('.mobile-sidebar-item span').forEach(el => {
+            el.textContent = '▼';
+          });
+
+          if (!submenu.classList.contains('active')) {
+            submenu.classList.add('active');
+            btn.querySelector('span').textContent = '▲';
+          }
+        });
+      });
+
+      // ======== 桌面端悬停下拉 ========
+      items.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          if (window.innerWidth <= 768) return;
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => {
+            const targetKey = item.dataset.target;
+            const index = pages.indexOf(targetKey);
+            if (index === -1) return;
+
+            panel.classList.add('active');
+            slider.style.transform = `translateX(${-index * pageWidth}px)`;
+            items.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+          }, 150);
+        });
+      });
+
+      navbar.addEventListener('mouseleave', () => {
+        if (window.innerWidth <= 768) return;
+        timeout = setTimeout(() => {
+          panel.classList.remove('active');
+          items.forEach(i => i.classList.remove('active'));
+        }, 100);
+      });
+
+      panel.addEventListener('mouseenter', () => clearTimeout(timeout));
+      panel.addEventListener('mouseleave', () => {
+        panel.classList.remove('active');
+        items.forEach(i => i.classList.remove('active'));
+      });
+    });
+  </script>
+
+</body>
+</html>
