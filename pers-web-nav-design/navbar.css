@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f9fafb;
+    color: #111;
+}
+
+.navbar {
+    position: relative;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+}
+
+/* 左侧图标区（正方形） */
+.nav-logo {
+    width: 32px;
+    height: 32px;
+    /* background: #000; */
+    border-radius: 0.7rem;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.nav-logo img{
+    width: 32px;
+    height: 32px;
+    border-radius: 0.7rem;
+}
+
+/* 导航菜单 */
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-item {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    color: #111;
+    transition: background 0.2s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: #f3f4f6;
+}
+
+/* 箭头间距 */
+.nav-item[data-dropdown] {
+    padding-right: 1.8rem;
+}
+
+.nav-item[data-dropdown]::after {
+    content: "";
+    position: absolute;
+    right: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 12px;
+    height: 12px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236b7280' stroke-width='1.5'%3E%3Cpath d='M1.5 4.5l4.5 4.5 4.5-4.5'/%3E%3C/svg%3E") no-repeat center;
+    opacity: 0.8;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.nav-item.active[data-dropdown]::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* 汉堡按钮（靠右） */
+.hamburger {
+    margin-left: auto;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #111;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 7px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* 桌面端下拉面板（左边界对齐导航项起始） */
+.dropdown-panel {
+    position: absolute;
+    top: 100%;
+    /* 左侧对齐：图标 + 间距 + 导航起始 */
+    left: calc(32px + 1.5rem); /* .nav-logo 宽 + margin-right */
+    width: 400px;
+    height: 280px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s, transform 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.dropdown-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(8px);
+}
+
+.dropdown-slider {
+    display: flex;
+    width: 300%;
+    min-width: 1200px;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.dropdown-page {
+    width: 400px;
+    flex-shrink: 0;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.dropdown-content {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    height: 100%;
+    display: flex;
+    gap: 2rem;
+}
+.dropdown-column{
+    min-width: 100px;
+}
+.dropdown-column h3 {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dropdown-column a {
+    display: block;
+    color: #111;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-column a:hover {
+    color: #000;
+    transform: translateX(4px);
+}
+
+/* ========== 移动端：Vercel 风格侧边栏 ========== */
+
+@media (max-width: 768px) {
+    .hamburger {
+      display: flex;
+    }
+
+    .nav-menu {
+      display: none;
+    }
+
+    /* 隐藏桌面下拉 */
+    .dropdown-panel {
+      display: none;
+    }
+}
+
+/* 移动端侧边栏（覆盖式） */
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1);
+    z-index: 1100;
+    padding: 3.5rem 1.5rem 2rem;
+    overflow-y: auto;
+}
+
+.mobile-sidebar.active {
+    transform: translateX(0);
+}
+
+.mobile-sidebar-item {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-sidebar-item:hover {
+    background: #f3f4f6;
+}
+
+.mobile-sidebar-submenu {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    display: none;
+}
+
+.mobile-sidebar-submenu.active {
+    display: block;
+}
+
+.mobile-sidebar-submenu a {
+    display: block;
+    padding: 0.5rem 0;
+    color: #555;
+    font-size: 0.9rem;
+}

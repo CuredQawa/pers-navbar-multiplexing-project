@@ -1,0 +1,111 @@
+<nav class="navbar" id="navbar">
+    <!-- 左侧正方形图标 -->
+    <div class="nav-logo">
+      <img src="img/profile-picture.jpg" alt="profile-picture">
+    </div>
+
+    <!-- 桌面导航 -->
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item" data-target="products" data-dropdown>成果展示</li>
+      <li class="nav-item" data-target="solutions" data-dropdown>个性展示</li>
+      <li class="nav-item" data-target="resources" data-dropdown>其他</li>
+    </ul>
+
+    <!-- 汉堡按钮（靠右） -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- 桌面下拉面板 -->
+    <div class="dropdown-panel" id="dropdownPanel">
+      <div class="dropdown-slider">
+        <div class="dropdown-page" data-page="products">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🚀 OBJECTIVELY</h3>
+              <a href="#">Web开发</a>
+              <a href="#">建模和动画</a>
+              <a href="#">MC作品</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🔧 SPIRITUAL</h3>
+              <a href="#">架空世界</a>
+              <a href="#">#</a>
+              <a href="#">#</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="solutions">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🎯 喜欢的</h3>
+              <a href="#">番剧</a>
+              <a href="#">游戏</a>
+              <a href="#">音乐</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🏢 推荐的</h3>
+              <a href="#">小说</a>
+              <a href="#">#</a>
+              <a href="#">#</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="resources">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>📘 Learn</h3>
+              <a href="#">文档收录</a>
+              <a href="#">个人博客</a>
+              <a href="#">旅游足迹</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🛠️ ABOUT</h3>
+              <a href="#">#</a>
+              <a href="#">联系方式</a>
+              <a href="#">状态</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</nav>
+
+<!-- 移动端侧边栏（Vercel 风格） -->
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-item" data-mobile-dropdown="products">
+      成果展示
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="products">
+      <a href="#">Web开发</a>
+      <a href="#">建模和动画</a>
+      <a href="#">MC作品</a>
+      <a href="#">架空世界</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="solutions">
+      个性展示
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="solutions">
+      <a href="#">番剧</a>
+      <a href="#">游戏</a>
+      <a href="#">音乐</a>
+      <a href="#">小说</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="resources">
+      其他
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="resources">
+      <a href="#">文档收录</a>
+      <a href="#">个人博客</a>
+      <a href="#">旅游足迹</a>
+      <a href="#">联系方式</a>
+      <a href="#">关于</a>
+    </div>
+</div>
