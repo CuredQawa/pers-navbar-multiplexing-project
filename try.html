@@ -227,40 +227,46 @@
       const panel = navbar.querySelector('.dropdown-panel');
       const slider = navbar.querySelector('.dropdown-slider');
       const items = navbar.querySelectorAll('.nav-item');
-
+  
       const pages = ['products', 'solutions', 'resources'];
       const pageWidth = 400;
-
+  
       let timeout;
-
+  
       items.forEach(item => {
         item.addEventListener('mouseenter', () => {
           clearTimeout(timeout);
-
+  
           timeout = setTimeout(() => {
             const targetKey = item.dataset.target;
             const index = pages.indexOf(targetKey);
-
-            // 仅当有 data-dropdown 且有效 target 时触发
+  
             if (index === -1 || !item.hasAttribute('data-dropdown')) return;
-
-            // 显示下拉面板
+  
             panel.classList.add('active');
-
-            // 滑动到对应页面
             slider.style.transform = `translateX(${-index * pageWidth}px)`;
-
-            // 更新当前激活项（旋转箭头）
+  
             items.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-
-          }, 150); // 防抖延迟
+          }, 150);
         });
       });
-
-      // 鼠标离开导航栏，隐藏面板并重置状态
+  
+      // 修复：鼠标离开 navbar 不立即关闭
       navbar.addEventListener('mouseleave', () => {
+        timeout = setTimeout(() => {
+          panel.classList.remove('active');
+          items.forEach(i => i.classList.remove('active'));
+        }, 100);
+      });
+  
+      // 鼠标进入面板，取消关闭
+      panel.addEventListener('mouseenter', () => {
         clearTimeout(timeout);
+      });
+  
+      // 鼠标离开面板，才关闭
+      panel.addEventListener('mouseleave', () => {
         panel.classList.remove('active');
         items.forEach(i => i.classList.remove('active'));
       });
