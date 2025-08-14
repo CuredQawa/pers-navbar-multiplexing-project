@@ -1,0 +1,105 @@
+<nav class="navbar" id="navbar">
+    <!-- 左侧正方形图标 -->
+    <div class="nav-logo"></div>
+
+    <!-- 桌面导航 -->
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item" data-target="products" data-dropdown>Products</li>
+      <li class="nav-item" data-target="solutions" data-dropdown>Solutions</li>
+      <li class="nav-item" data-target="resources" data-dropdown>Resources</li>
+    </ul>
+
+    <!-- 汉堡按钮（靠右） -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- 桌面下拉面板 -->
+    <div class="dropdown-panel" id="dropdownPanel">
+      <div class="dropdown-slider">
+        <div class="dropdown-page" data-page="products">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🚀 Frontend</h3>
+              <a href="#">Next.js</a>
+              <a href="#">Edge Functions</a>
+              <a href="#">Static Hosting</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🔧 Backend</h3>
+              <a href="#">Serverless</a>
+              <a href="#">Edge Config</a>
+              <a href="#">Functions</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="solutions">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>🎯 Use Cases</h3>
+              <a href="#">Jamstack</a>
+              <a href="#">SSG</a>
+              <a href="#">Microservices</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🏢 Industries</h3>
+              <a href="#">E-commerce</a>
+              <a href="#">Marketing</a>
+              <a href="#">Startups</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-page" data-page="resources">
+          <div class="dropdown-content">
+            <div class="dropdown-column">
+              <h3>📘 Learn</h3>
+              <a href="#">Docs</a>
+              <a href="#">Blog</a>
+              <a href="#">Tutorials</a>
+            </div>
+            <div class="dropdown-column">
+              <h3>🛠️ Support</h3>
+              <a href="#">Help Center</a>
+              <a href="#">Contact</a>
+              <a href="#">Status</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</nav>
+
+<!-- 移动端侧边栏（Vercel 风格） -->
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-item" data-mobile-dropdown="products">
+      Products
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="products">
+      <a href="#">Next.js</a>
+      <a href="#">Edge Functions</a>
+      <a href="#">Static Hosting</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="solutions">
+      Solutions
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="solutions">
+      <a href="#">Jamstack</a>
+      <a href="#">SSG</a>
+      <a href="#">Microservices</a>
+    </div>
+
+    <div class="mobile-sidebar-item" data-mobile-dropdown="resources">
+      Resources
+      <span>▼</span>
+    </div>
+    <div class="mobile-sidebar-submenu" data-submenu="resources">
+      <a href="#">Docs</a>
+      <a href="#">Blog</a>
+      <a href="#">Tutorials</a>
+    </div>
+</div>
